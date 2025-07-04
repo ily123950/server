@@ -17,7 +17,8 @@ export default {
         }
       })
 
-      return new Response(await response.text(), {
+      const text = await response.text()
+      return new Response(text, {
         status: response.status,
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -25,7 +26,14 @@ export default {
         }
       })
     } catch (e) {
-      return new Response("Ошибка: " + e.message, { status: 500 })
+      // Возвращаем JSON даже при ошибке
+      return new Response(JSON.stringify({ error: true, message: e.message }), {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
     }
   }
 }
